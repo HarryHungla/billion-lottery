@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>佰億元彩券 | Billion Lottery</title>
+    <style>
+        body { font-family: Arial, sans-serif; text-align: center; margin: 0; padding: 0; background-color: #f8f9fa; }
+        .container { max-width: 800px; margin: 20px auto; padding: 20px; background: white; border-radius: 8px; box-shadow: 0px 0px 10px rgba(0,0,0,0.1); }
+        h1 { color: #d81e06; }
+        h2 { color: #333; }
+        p { font-size: 18px; color: #555; }
+        .info { margin: 15px 0; }
+        .lottery-result { font-size: 22px; font-weight: bold; color: #d81e06; margin: 15px 0; }
+        .footer { margin-top: 20px; font-size: 14px; color: #888; }
+        .error { color: red; font-size: 16px; }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h1>佰億元彩券</h1>
+        <p class="info"><strong>地址：</strong>台北市和平東路二段 84-1 號</p>
+
+        <h2>最新賓果賓果開獎結果</h2>
+        <p id="lottery-result" class="lottery-result">載入中...</p>
+        <p id="error-msg" class="error"></p>
+
+        <h2>熱門彩券介紹</h2>
+        <p>本店提供各式彩券，包括：</p>
+        <ul style="text-align: left; display: inline-block;">
+            <li>大樂透</li>
+            <li>今彩 539</li>
+            <li>刮刮樂</li>
+            <li>賓果賓果</li>
+        </ul>
+
+        <p class="footer">© 2025 佰億元彩券 - 祝您中大獎！</p>
+        <p class="footer">GitHub Pages 網址：<a href="https://harryhungla.github.io/billion-lottery/" target="_blank">點此訪問</a></p>
+    </div>
+
+    <script>
+        async function fetchLotteryResult() {
+            const url = "https://www.taiwanlottery.com.tw/lotto/BINGOBINGO/drawing.aspx";
+            try {
+                let response = await fetch(url, { mode: "no-cors" });
+                let text = await response.text();
+
+                // 嘗試擷取開獎號碼
+                let match = text.match(/<span class="BINGOBINGO_ball.*?>(\d+)<\/span>/g);
+                if (match) {
+                    let numbers = match.map(num => num.replace(/<.*?>/g, ""));
+                    document.getElementById("lottery-result").innerText = "最新中獎號碼：" + numbers.join(", ");
+                } else {
+                    document.getElementById("error-msg").innerText = "無法擷取開獎號碼，請稍後再試。";
+                }
+            } catch (error) {
+                document.getElementById("error-msg").innerText = "抓取開獎結果時發生錯誤！";
+            }
+        }
+
+        fetchLotteryResult();
+        setInterval(fetchLotteryResult, 60000); // 每 1 分鐘更新一次
+    </script>
+
+</body>
+</html>
